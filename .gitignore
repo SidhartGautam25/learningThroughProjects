@@ -1,0 +1,77 @@
+# General
+.DS_Store
+Thumbs.db
+.env
+.env.local
+.env.*.local
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node.js
+node_modules/
+jspm_packages/
+dist/
+coverage/
+
+# Next.js
+.next/
+out/
+build/
+
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+db.sqlite3
+db.sqlite3-journal
+local_settings.py
+
+# Java / Spring Boot
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+.gradle/
+build/
+bin/
+
+# Golang
+# Binaries
+# (Assumes your binary is named 'main' or similar, strict exclusion is hard without project context)
+# Common binary names or patterns:
+*.exe
+*.test
+*.prof
+vendor/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Docker
+docker-compose.override.yml
