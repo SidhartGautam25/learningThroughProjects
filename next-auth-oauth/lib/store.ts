@@ -1,12 +1,11 @@
-
-// This is a simple in-memory store to simulate a database.
-// In a real application, you would use a real database like PostgreSQL, MongoDB, etc.
+// In-memory store simulating a database.
+// Uses globalThis to persist data across dev server reloads.
 
 export interface User {
     id: string;
     name: string;
     email: string;
-    password?: string; // In a real app, this should be hashed!
+    password?: string;
 }
 
 export interface Todo {
@@ -17,13 +16,12 @@ export interface Todo {
     createdAt: Date;
 }
 
-// Initial mock data
 const initialUsers: User[] = [
     {
         id: '1',
         name: 'Test User',
         email: 'test@example.com',
-        password: 'password123', // PEAK SECURITY
+        password: 'password123',
     },
 ];
 
@@ -50,6 +48,12 @@ if (process.env.NODE_ENV !== 'production') {
     globalForStore.todos = todos;
 }
 
+// User functions
+export const findUserByEmail = async (email: string): Promise<User | undefined> => {
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    return users.find((user) => user.email === email);
+};
+
 export const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
     await new Promise((resolve) => setTimeout(resolve, 10));
     const newUser = {
@@ -60,13 +64,7 @@ export const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
     return newUser;
 };
 
-
-export const findUserByEmail = async (email: string): Promise<User | undefined> => {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    return users.find((user) => user.email === email);
-};
-
+// Todo functions
 export const getUserTodos = async (userId: string): Promise<Todo[]> => {
     await new Promise((resolve) => setTimeout(resolve, 10));
     return todos.filter((todo) => todo.userId === userId).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -97,7 +95,6 @@ export const toggleTodo = async (todoId: string, userId: string): Promise<Todo |
 
 export const deleteTodo = async (todoId: string, userId: string): Promise<boolean> => {
     await new Promise((resolve) => setTimeout(resolve, 10));
-    const initialLength = todos.length;
     const index = todos.findIndex(t => t.id === todoId && t.userId === userId);
     if (index !== -1) {
         todos.splice(index, 1);
