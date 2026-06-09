@@ -1,6 +1,6 @@
 import pino from "pino";
 import { requestContext } from "../context/requestContext.js";
-import { error } from "node:console";
+import { error, log } from "node:console";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -38,4 +38,8 @@ if (isDev) {
 export const logger = pino(options);
 export const auditLogger = logger.child({
   logType: "audit",
+});
+
+export const performanceLogger = logger.child({
+  logType: "performance",
 });

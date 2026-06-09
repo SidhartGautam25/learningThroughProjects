@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { logger } from "../logger/index.js";
 import { audit } from "../logger/audit.js";
+import { logPerformance, measureAsync } from "../logger/performance.js";
 
 const router = Router();
 
@@ -77,5 +78,31 @@ router.get("/validation-error", () => {
 
   throw error;
 });
+
+router.get("/performance-test", (_req, res) => {
+  logPerformance("manual_test", 125);
+
+  res.json({
+    success: true,
+  });
+});
+
+router.get(
+  "/slow-operation",
+
+  async (_req, res) => {
+    await measureAsync(
+      "slow_db_query",
+
+      async () => {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      },
+    );
+
+    res.json({
+      success: true,
+    });
+  },
+);
 
 export default router;
