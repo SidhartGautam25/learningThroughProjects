@@ -1,0 +1,16 @@
+-> typescript merges interfaces
+   original express -> 
+       interface Request {
+            body: any;
+       }
+
+   when we declare -> 
+       interface Request {
+            requestId: string;
+       }
+    now request interface become 
+
+    interface Request {
+        body: any;
+        requestId: string;
+    }
