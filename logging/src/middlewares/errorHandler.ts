@@ -10,6 +10,11 @@ export function errorHandler(
 ) {
   logger.error(
     {
+      event: {
+        category: "application",
+        action: "unhandled_error",
+        outcome: "failure",
+      },
       err: error,
     },
     "unhandled error",

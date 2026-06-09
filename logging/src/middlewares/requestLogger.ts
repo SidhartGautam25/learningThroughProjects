@@ -9,10 +9,20 @@ export function requestLogger(req: Request, res: Response, next: NextFunction) {
 
     logger.info(
       {
-        method: req.method,
-        path: req.originalUrl,
-        statusCode: res.statusCode,
-        durationMs,
+        event: {
+          category: "application",
+          action: "http_request_completed",
+          outcome: res.statusCode >= 500 ? "failure" : "success",
+        },
+        resource: {
+          type: "http_request",
+          method: req.method,
+          path: req.originalUrl,
+          statusCode: res.statusCode,
+        },
+        performance: {
+          durationMs,
+        },
       },
       "Request completed",
     );

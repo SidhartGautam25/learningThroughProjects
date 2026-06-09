@@ -2,6 +2,20 @@ import pino from "pino";
 import { requestContext } from "../context/requestContext.js";
 import { error, log } from "node:console";
 
+/*
+
+we want this schema for our logs
+
+{
+  "event": {...},
+  "resource": {...},
+  "actor": {...},
+  "performance": {...},
+  "err": {...}
+}
+
+*/
+
 const isDev = process.env.NODE_ENV !== "production";
 
 const options: pino.LoggerOptions = {
@@ -23,8 +37,19 @@ const options: pino.LoggerOptions = {
   },
   mixin() {
     const store = requestContext.getStore();
+
     return {
-      ...(store?.requestId && { requestId: store.requestId }),
+      ...(store?.requestId
+        ? {
+            requestId: store.requestId,
+          }
+        : {}),
+
+      ...(store?.traceId
+        ? {
+            traceId: store.traceId,
+          }
+        : {}),
     };
   },
 };
