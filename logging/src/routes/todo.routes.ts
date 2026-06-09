@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { logger } from "../logger/index.js";
+import { audit } from "../logger/audit.js";
 
 const router = Router();
 
@@ -36,11 +37,16 @@ router.get("/", (_req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const id = Number(req.params.id);
+  const todoId = req.params.id;
 
-  logger.info(
+  const userId = "user-45";
+
+  audit(
     {
-      todoId: id,
+      action: "delete_todo",
+      actorId: userId,
+      targetId: todoId,
+      outcome: "success",
     },
     "Todo deleted",
   );

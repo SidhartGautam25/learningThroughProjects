@@ -36,3 +36,6 @@ if (isDev) {
 }
 
 export const logger = pino(options);
+export const auditLogger = logger.child({
+  logType: "audit",
+});
