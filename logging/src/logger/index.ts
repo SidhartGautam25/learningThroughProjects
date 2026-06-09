@@ -1,4 +1,5 @@
 import pino from "pino";
+import { requestContext } from "../context/requestContext.js";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -10,6 +11,12 @@ const options: pino.LoggerOptions = {
   base: {
     service: "todo-api",
     environment: process.env.NODE_ENV || "development",
+  },
+  mixin() {
+    const store = requestContext.getStore();
+    return {
+      ...(store?.requestId && { requestId: store.requestId }),
+    };
   },
 };
 
