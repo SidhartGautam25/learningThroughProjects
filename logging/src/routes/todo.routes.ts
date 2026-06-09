@@ -60,4 +60,16 @@ router.get("/test-levels", (_req, res) => {
   });
 });
 
+router.get("/error", () => {
+  throw new Error("man made error ");
+});
+
+router.get("/validation-error", () => {
+  const error = new Error("Title is required");
+
+  error.name = "ValidationError";
+
+  throw error;
+});
+
 export default router;

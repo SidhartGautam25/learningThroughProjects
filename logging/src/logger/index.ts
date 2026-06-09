@@ -1,5 +1,6 @@
 import pino from "pino";
 import { requestContext } from "../context/requestContext.js";
+import { error } from "node:console";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -11,6 +12,14 @@ const options: pino.LoggerOptions = {
   base: {
     service: "todo-api",
     environment: process.env.NODE_ENV || "development",
+  },
+  redact: {
+    paths: ["password", "token"],
+    censor: "[REDACTED]",
+  },
+  serializers: {
+    err: pino.stdSerializers.err,
+    error: pino.stdSerializers.err,
   },
   mixin() {
     const store = requestContext.getStore();
