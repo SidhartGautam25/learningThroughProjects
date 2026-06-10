@@ -1,6 +1,7 @@
 import pino from "pino";
 import { requestContext } from "../context/requestContext.js";
 import { error, log } from "node:console";
+import { getTraceContext } from "../telemetry/tracing.js";
 
 /*
 
@@ -35,21 +36,31 @@ const options: pino.LoggerOptions = {
     err: pino.stdSerializers.err,
     error: pino.stdSerializers.err,
   },
+
   mixin() {
+    // const store = requestContext.getStore();
+
+    // return {
+    //   ...(store?.requestId
+    //     ? {
+    //         requestId: store.requestId,
+    //       }
+    //     : {}),
+
+    //   ...(store?.traceId
+    //     ? {
+    //         traceId: store.traceId,
+    //       }
+    //     : {}),
+    // };
+
     const store = requestContext.getStore();
+    const traceContext = getTraceContext();
 
     return {
-      ...(store?.requestId
-        ? {
-            requestId: store.requestId,
-          }
-        : {}),
-
-      ...(store?.traceId
-        ? {
-            traceId: store.traceId,
-          }
-        : {}),
+      requestId: store?.requestId,
+      traceId: traceContext.traceId,
+      spanId: traceContext.spanId,
     };
   },
 };
