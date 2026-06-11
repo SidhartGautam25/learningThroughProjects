@@ -2,6 +2,7 @@ import { Router, type Request } from "express";
 import { logger } from "../logger/index.js";
 import { audit } from "../logger/audit.js";
 import { logPerformance, measureAsync } from "../logger/performance.js";
+import { trace } from "@opentelemetry/api";
 
 const router = Router();
 
@@ -22,36 +23,70 @@ function getActor(req: Request) {
   };
 }
 
-router.post("/", (req, res) => {
-  const todo = {
-    id: Date.now(),
-    title: req.body.title,
-    completed: false,
-  };
-  const actor = getActor(req);
+// post route for version 1 , means before implementing openTelemetry
+// router.post("/", (req, res) => {
+//   // const todo = {
+//   //   id: Date.now(),
+//   //   title: req.body.title,
+//   //   completed: false,
+//   // };
+//   // const actor = getActor(req);
 
-  todos.push(todo);
+//   // todos.push(todo);
 
-  logger.info(
-    {
-      event: {
-        category: "application",
-        action: "create_todo",
-        outcome: "success",
-      },
-      actor,
-      resource: {
-        type: "todo",
-        id: String(todo.id),
-      },
+//   // logger.info(
+//   //   {
+//   //     event: {
+//   //       category: "application",
+//   //       action: "create_todo",
+//   //       outcome: "success",
+//   //     },
+//   //     actor,
+//   //     resource: {
+//   //       type: "todo",
+//   //       id: String(todo.id),
+//   //     },
+//   //   },
+//   //   "Todo created",
+//   // );
+
+//   // res.status(201).json(todo);
+
+// });
+
+router.post("/", async (req, res) => {
+  const tracer = trace.getTracer("todo-api");
+
+  await tracer.startActiveSpan(
+    "create_todo",
+
+    async (span) => {
+      try {
+        const todo = {
+          id: Date.now(),
+          title: req.body.title,
+        };
+
+        logger.info(
+          {
+            resource: {
+              type: "todo",
+              id: todo.id,
+            },
+          },
+          "Todo created",
+        );
+
+        res.status(201).json(todo);
+      } finally {
+        span.end();
+      }
     },
-    "Todo created",
   );
-
-  res.status(201).json(todo);
 });
 
 router.get("/", (_req, res) => {
+  console.log("base route");
   logger.info(
     {
       event: {
@@ -68,6 +103,13 @@ router.get("/", (_req, res) => {
   );
 
   res.json(todos);
+});
+
+router.get("/otel-test", (_req, res) => {
+  const span = trace.getActiveSpan();
+  res.json({
+    success: true,
+  });
 });
 
 // curl http://localhost:3000/todos/test-levels

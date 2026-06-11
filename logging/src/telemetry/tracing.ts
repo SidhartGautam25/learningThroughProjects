@@ -5,9 +5,9 @@ export function getTraceContext() {
   if (!span) {
     return {};
   }
-  const context = span.spanContext();
+  const spanContext = span.spanContext();
   return {
-    traceId: context.traceId,
-    spanId: context.spanId,
+    traceId: spanContext.traceId,
+    spanId: spanContext.spanId,
   };
 }
