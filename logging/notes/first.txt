@@ -1,0 +1,24 @@
+// to run -> npx tsx src/server.ts
+
+
+-> Log levels 
+
+these are the log levels 
+
+trace
+debug
+info
+warn
+error
+fatal
+
+
+1. after adding this code 
+
+export const logger = pino({
+  level: process.env.LOG_LEVEL || "info",
+});
+
+now if we run -> LOG_LEVEL=info npx tsx src/server.ts
+and request -> curl -X GET http://localhost:3000/todos/test-levels
+we will only see info , warn , error logs
