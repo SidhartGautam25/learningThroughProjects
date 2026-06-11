@@ -1,0 +1,36 @@
+services:
+
+  alloy:
+    image: grafana/alloy:latest
+
+    container_name: alloy
+
+    command:
+      - run
+      - /etc/alloy/config.alloy
+      - --server.http.listen-addr=0.0.0.0:12345
+
+    volumes:
+      - ./alloy-config.alloy:/etc/alloy/config.alloy
+
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "12345:12345"
+
+    depends_on:
+      - tempo
+
+  tempo:
+    image: grafana/tempo:latest
+
+    container_name: tempo
+
+    command:
+      - -config.file=/etc/tempo.yaml
+
+    volumes:
+      - ./tempo.yaml:/etc/tempo.yaml
+
+    ports:
+      - "3200:3200"
