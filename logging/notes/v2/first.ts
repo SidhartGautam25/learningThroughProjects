@@ -43,9 +43,37 @@ npm install \
 
 /*
 
+npm install @opentelemetry/exporter-trace-otlp-http
 
-
-
-
-
+it is an exporter , as we need to share the spanid and all details outisde
+our application , and so we need an exporter , otherwise this span id and all details
+will stay inside our application 
 */
+
+/*
+
+so our architecture is going to be like this 
+
+Todo App
+   ↓
+OTLP Exporter
+   ↓
+Grafana Alloy
+
+grafana alloy handles logs, metrics and traces 
+
+
+
+after that our architecture will be this 
+
+Express
+ ↓
+OpenTelemetry
+ ↓
+Alloy
+ ↓
+Tempo
+*/
+
+
+

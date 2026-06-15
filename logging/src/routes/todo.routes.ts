@@ -3,6 +3,7 @@ import { logger } from "../logger/index.js";
 import { audit } from "../logger/audit.js";
 import { logPerformance, measureAsync } from "../logger/performance.js";
 import { trace } from "@opentelemetry/api";
+import { tracer } from "../telemetry/tracer.js";
 
 const router = Router();
 
@@ -111,6 +112,28 @@ router.get("/otel-test", (_req, res) => {
     success: true,
   });
 });
+
+router.get(
+  "/manual-span",
+
+  async (_req, res) => {
+    await tracer.startActiveSpan(
+      "fake_database_query",
+
+      async (span) => {
+        try {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        } finally {
+          span.end();
+        }
+      },
+    );
+
+    res.json({
+      success: true,
+    });
+  },
+);
 
 // curl http://localhost:3000/todos/test-levels
 router.get("/test-levels", (_req, res) => {
